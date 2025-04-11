@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Facilitate Connection{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Facilitate Connection</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Land Details</h5>
+                            <p><strong>Location:</strong> {{ land.location }}</p>
+                            <p><strong>Size:</strong> {{ land.size }} acres</p>
+                            <p><strong>Soil Type:</strong> {{ land.soil_type }}</p>
+                            <p><strong>Price:</strong> ₹{{ land.price }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Land Seeker Details</h5>
+                            <p><strong>Name:</strong> {{ seeker.user.email }}</p>
+                            <p><strong>Contact:</strong> {{ seeker.contact_number }}</p>
+                            <p><strong>Interest Expressed:</strong> {{ interest.expressed_on|date:"F d, Y" }}</p>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="start_date">Start Date</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="end_date">End Date</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="terms">Terms and Conditions</label>
+                            <textarea class="form-control" id="terms" name="terms" rows="3" required>Standard terms apply</textarea>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="amount">Initial Payment Amount (₹)</label>
+                                    <input type="number" class="form-control" id="amount" name="amount" value="5000" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="payment_method">Payment Method</label>
+                                    <select class="form-control" id="payment_method" name="payment_method" required>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="Cheque">Cheque</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success">Create Agreement</button>
+                            <a href="{% url 'land_details' pk=land.id %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

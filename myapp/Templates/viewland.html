@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land Listings</title>
+    <style>
+        /* Layout Styles */
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 220px;
+            background-color: #e4e4e4;
+            color: #333;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid #ddd;
+        }
+        .sidebar h2 {
+            color: #333;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+        .sidebar ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+        .sidebar ul li a:hover {
+            color: #007bff;
+        }
+        
+        /* Main Content Styles */
+        .content {
+            margin-left: 240px;
+            padding: 20px;
+            width: calc(100% - 240px);
+        }
+        h1 {
+            font-size: 24px;
+        }
+        
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .image-thumbnail {
+            width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{% url 'landowner_dashboard' %}">Dashboard</a></li>
+            
+            <li><a href="{% url 'add_land_listing' %}">Add New Listing</a></li>
+            <li><a href="{% url 'land_listing_list' %}"><font color="green">Land Listings</font></a></li>
+       
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+    <div style="margin-left: 20px;">
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Land Listings</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Land Name</th>
+                    <th>Location</th>
+                    <th>Size (Acres/Sq M)</th>
+                    <th>Soil Type</th>
+                    <th>Water Availability</th>
+                    <th>Image</th>
+                    <th>Description</th>
+                  
+                </tr>
+            </thead>
+            <tbody>
+                {% for listing in listings %}
+                <tr>
+                    <td>{{ listing.land_name }}</td>
+                    <td>{{ listing.location }}</td>
+                    <td>{{ listing.size }}</td>
+                    <td>{{ listing.soil_type }}</td>
+                    <td>{{ listing.water_availability|yesno:"Yes,No" }}</td>
+                    <td>
+                        {% if listing.image %}
+                        <img src="{% static 'images/land1.jpeg' %}" alt="{{ listing.land_name }}" class="image-thumbnail">
+
+
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>{{ listing.description }}</td>
+                  
+                </tr>
+            </div>
+                {% empty %}
+                <tr>
+                    <td colspan="9">No land listings available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

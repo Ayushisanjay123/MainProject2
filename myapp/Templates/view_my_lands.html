@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}My Listed Lands{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>My Listed Lands</h2>
+            <div class="row">
+                {% for land in lands %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if land.image %}
+                <img src="{{ land.image.url }}" class="card-img-top" alt="Land Image">
+                {% else %}
+                <div class="card-img-top bg-light text-center py-3">No Image Available</div>
+                {% endif %}
+                            <div class="card-body">
+                    <h5 class="card-title">{{ land.location }}</h5>
+                                <p class="card-text"><strong>Size:</strong> {{ land.size }} acres</p>
+                    <p class="card-text"><strong>Soil Type:</strong> {{ land.soil_type }}</p>
+                                <p class="card-text"><strong>Price:</strong> ₹{{ land.price }}</p>
+                    <p class="card-text"><strong>Water Available:</strong> {{ land.water_availability|yesno:"Yes,No" }}</p>
+                    <p class="card-text"><strong>Available:</strong> {{ land.is_available|yesno:"Yes,No" }}</p>
+                    {% if land.description %}
+                    <p class="card-text"><strong>Description:</strong> {{ land.description }}</p>
+                    {% endif %}
+                    <div class="btn-group">
+                        <a href="{% url 'edit_land' land.id %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'delete_land' land.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this land?')">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No lands listed yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

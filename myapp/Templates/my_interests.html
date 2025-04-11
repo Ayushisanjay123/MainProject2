@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Interests</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, #f0fff0, #e6ffe6);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2d572c;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .interest-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .interest-card:hover {
+            transform: translateY(-5px);
+        }
+        .interest-card h3 {
+            margin-top: 0;
+            color: #33691e;
+        }
+        .interest-card p {
+            margin: 6px 0;
+        }
+        .no-interests {
+            text-align: center;
+            color: #888;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Interests</h1>
+
+    {% if interests %}
+        <div class="card-container">
+            {% for interest in interests %}
+                <div class="interest-card">
+                    <h3>{{ interest.land.title }}</h3>
+                    <p><strong>Location:</strong> {{ interest.land.location }}</p>
+                    <p><strong>Size:</strong> {{ interest.land.size }} acres</p>
+                    <p><strong>Price:</strong> ₹{{ interest.land.price }}</p>
+                    <p><strong>Date Interested:</strong> {{ interest.date_interested|date:"d M Y" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-interests">You have not shown interest in any lands yet.</p>
+    {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Search Lands{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Search Available Lands</h3>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" name="q" class="form-control" placeholder="Search by location..." value="{{ request.GET.q }}">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% if lands %}
+                    <div class="row">
+                        {% for land in lands %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                {% if land.image %}
+                                <img src="{{ land.image.url }}" class="card-img-top" alt="Land Image" style="height: 200px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light text-center py-5">
+                                    <p class="mb-0">No Image Available</p>
+                                </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ land.location }}</h5>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p class="card-text"><strong>Size:</strong> {{ land.size }} acres</p>
+                                            <p class="card-text"><strong>Soil Type:</strong> {{ land.soil_type }}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="card-text"><strong>Price:</strong> ₹{{ land.price }}</p>
+                                            <p class="card-text"><strong>Water:</strong> {{ land.water_availability|yesno:"Yes,No" }}</p>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'land_details' land.id %}" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        {% if request.GET.q %}
+                        No lands found matching your search criteria.
+                        {% else %}
+                        No lands are currently available.
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

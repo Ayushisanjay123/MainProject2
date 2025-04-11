@@ -1,0 +1,20 @@
+<!-- myapp/templates/featured_lands.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Featured Lands</title>
+</head>
+<body>
+    <h1>Featured Lands</h1>
+    <ul>
+        {% for land in lands %}
+        <li>
+            <h2>{{ land.name }}</h2>
+            <p>Location: {{ land.location }}</p>
+            <p>Price: {{ land.price }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'index' %}">Back to Home</a>
+</body>
+</html>

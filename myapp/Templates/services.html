@@ -1,0 +1,60 @@
+<!-- templates/services.html -->
+
+{% extends 'base.html' %}
+{% block title %}Our Services{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Our Services</h2>
+    <p>At YieldHub, we offer a range of services designed to connect landowners and land seekers effectively. Our goal is to simplify the process of finding and offering agricultural land. Here’s an overview of the services we provide:</p>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="service-card p-3 border rounded">
+                <h3 class="h4">Land Listings</h3>
+                <p>Landowners can list their available agricultural land on our platform with detailed descriptions, photos, and pricing information. This helps land seekers find suitable options quickly and efficiently.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="service-card p-3 border rounded">
+                <h3 class="h4">Advanced Search</h3>
+                <p>Our advanced search functionality allows land seekers to filter land listings based on location, size, crop requirements, and more. This ensures that users find the perfect match for their needs.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="service-card p-3 border rounded">
+                <h3 class="h4">Communication Tools</h3>
+                <p>Our platform includes integrated messaging features, enabling direct communication between landowners and land seekers. This facilitates discussions about land details, negotiations, and more.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4 mb-4">
+            <div class="service-card p-3 border rounded">
+                <h3 class="h4">Crop Recommendations</h3>
+                <p>Land seekers can receive crop recommendations based on their land requirements and local agricultural conditions. This feature helps optimize land usage and improves yield potential.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="service-card p-3 border rounded">
+                <h3 class="h4">Yield Prediction</h3>
+                <p>Our yield prediction tool provides estimates on the potential yield for different crops based on various factors such as land size, soil quality, and weather conditions. This helps in planning and decision-making.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="service-card p-3 border rounded">
+                <h3 class="h4">Reviews and Ratings</h3>
+                <p>Land seekers can leave reviews and ratings for landowners, providing valuable feedback and building trust within the community. This feature helps maintain high standards and accountability.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Back Button -->
+    <!-- Back Button -->
+    <div class="back-button-container" style="text-align: right; margin-top: 20px;">
+        <a href="{% url 'myapp:index' %}" class="btn-secondary">Back to Home</a>
+    </div>
+    </div>
+</div>
+{% endblock %}

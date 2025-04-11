@@ -1,0 +1,17 @@
+/* CSS for Admin Dashboard */
+:root {
+    --primary-color: #6c5ce7;
+    --secondary-color: #a29bfe;
+    --text-color: #2d3436;
+    --bg-color: #dfe6e9;
+    --card-bg: #ffffff;
+    --border-color: #b2bec3;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+}
+
+/* Add additional styling rules similar to the inline CSS */

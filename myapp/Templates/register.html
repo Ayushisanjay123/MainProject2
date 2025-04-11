@@ -1,0 +1,378 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #e0eafc, #cfdef3);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        max-width: 900px;
+        margin-top: 50px;
+    }
+
+    .card {
+        border-radius: 15px;
+        background-color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+    }
+
+    h2 {
+        margin-bottom: 25px;
+        font-weight: bold;
+        text-align: center;
+        color: #333;
+    }
+
+    label {
+        font-weight: 500;
+        margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="file"],
+    select,
+    textarea {
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-top: 5px;
+        width: 100%;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .btn-primary {
+        border-radius: 25px;
+        padding: 12px 40px;
+        font-weight: bold;
+        background-color: #007bff;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .invalid-feedback {
+        color: red;
+        font-size: 0.85em;
+        display: none;
+    }
+
+    #password_error {
+        display: none;
+    }
+
+    .form-section {
+        margin-bottom: 20px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 15px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <h2>Register</h2>
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+        {% endif %}
+        <form method="POST" enctype="multipart/form-data" id="registerForm">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 form-section">
+                    <label for="first_name">First Name</label>
+                    <input type="text" name="first_name" id="first_name" required class="form-control">
+                    <div class="invalid-feedback" id="first_name_error">Only letters allowed (2-30 characters), no leading/trailing spaces</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" name="last_name" id="last_name" required class="form-control">
+                    <div class="invalid-feedback" id="last_name_error">Only letters allowed (2-30 characters), no leading/trailing spaces</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required class="form-control">
+                    <div class="invalid-feedback" id="email_error">Please enter a valid email address with no leading/trailing spaces</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="phone">Phone</label>
+                    <input type="tel" name="phone" id="phone" required class="form-control">
+                    <div class="invalid-feedback" id="phone_error">Please enter a valid 10-digit phone number with no spaces</div>
+                </div>
+
+                <div class="col-md-12 form-section">
+                    <label for="address">Address</label>
+                    <textarea name="address" id="address" required class="form-control"></textarea>
+                    <div class="invalid-feedback" id="address_error">Address must be between 10-200 characters with no leading/trailing spaces</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="pincode">Pincode</label>
+                    <input type="text" name="pincode" id="pincode" required class="form-control">
+                    <div class="invalid-feedback" id="pincode_error">Please enter a valid 6-digit pincode with no spaces</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label>Gender</label><br>
+                    <input type="radio" name="gender" value="Male" required> Male
+                    <input type="radio" name="gender" value="Female" style="margin-left: 10px;"> Female
+                    <div class="invalid-feedback" id="gender_error" style="display: block;">Please select your gender</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required class="form-control">
+                    <div class="invalid-feedback" id="password_strength_error">Password must be at least 6 characters with no leading/trailing spaces</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" name="confirm_password" id="confirm_password" required class="form-control">
+                    <div class="invalid-feedback" id="password_error">Passwords must match with no leading/trailing spaces</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="photo">Profile Photo</label>
+                    <input type="file" name="photo" id="photo" accept="image/*" class="form-control">
+                    <div class="invalid-feedback" id="photo_error">Please upload a valid image file (JPEG, PNG, etc.)</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="role">Role</label>
+                    <select name="role" id="role" required class="form-control">
+                        <option value="">Select Role</option>
+                        <option value="landowner">Land Owner</option>
+                        <option value="landseeker">Land Seeker</option>
+                        <option value="broker">Broker</option> 
+                    </select>
+                    <div class="invalid-feedback" id="role_error">Please select a role</div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    // Real-time validation for all fields
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+    });
+    
+    // Form submission validation
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Validate all fields
+        inputs.forEach(input => {
+            if (!validateField(input)) {
+                isValid = false;
+            }
+        });
+        
+        // Special password confirmation check
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const passwordError = document.getElementById('password_error');
+        
+        if (password.value !== confirmPassword.value) {
+            passwordError.style.display = 'block';
+            confirmPassword.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            passwordError.style.display = 'none';
+            confirmPassword.classList.remove('is-invalid');
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            // Scroll to the first invalid field
+            const firstInvalid = form.querySelector('.is-invalid');
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+    
+    // Field validation function
+    function validateField(field) {
+        const errorElement = document.getElementById(`${field.id}_error`);
+        const value = field.value.trim();
+        
+        // Skip validation for unchecked radio buttons
+        if (field.type === 'radio' && !field.checked) {
+            return true;
+        }
+        
+        // Check for leading/trailing spaces
+        if (field.value !== field.value.trim() && field.type !== 'file' && field.type !== 'radio' && field.tagName !== 'SELECT') {
+            showError(field, errorElement, 'No leading or trailing spaces allowed');
+            return false;
+        }
+        
+        // Check required fields
+        if (field.required && !value) {
+            showError(field, errorElement, 'This field is required');
+            return false;
+        }
+        
+        // Check for excessive spaces between words
+        if ((field.id === 'first_name' || field.id === 'last_name' || field.id === 'address') && /\s{2,}/.test(field.value)) {
+            showError(field, errorElement, 'Only single spaces allowed between words');
+            return false;
+        }
+        
+        // Field-specific validation
+        switch(field.id) {
+            case 'first_name':
+            case 'last_name':
+                if (!/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(value)) {
+                    showError(field, errorElement, 'Only letters and single spaces between words allowed (2-30 characters)');
+                    return false;
+                }
+                if (value.length < 2 || value.length > 30) {
+                    showError(field, errorElement, 'Must be between 2-30 characters');
+                    return false;
+                }
+                break;
+                
+            case 'email':
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    showError(field, errorElement, 'Please enter a valid email address');
+                    return false;
+                }
+                break;
+                
+            case 'phone':
+                if (!/^[0-9]{10}$/.test(value)) {
+                    showError(field, errorElement, 'Please enter a valid 10-digit phone number with no spaces');
+                    return false;
+                }
+                break;
+                
+            case 'address':
+                if (value.length < 10 || value.length > 200) {
+                    showError(field, errorElement, 'Address must be between 10-200 characters');
+                    return false;
+                }
+                break;
+                
+            case 'pincode':
+                if (!/^[0-9]{6}$/.test(value)) {
+                    showError(field, errorElement, 'Please enter a valid 6-digit pincode with no spaces');
+                    return false;
+                }
+                break;
+                
+            case 'password':
+                if (value.length < 6) {
+                    showError(field, errorElement, 'Password must be at least 6 characters');
+                    return false;
+                }
+                break;
+                
+            case 'photo':
+                if (field.files.length > 0) {
+                    const file = field.files[0];
+                    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                    if (!validTypes.includes(file.type)) {
+                        showError(field, errorElement, 'Please upload a valid image file (JPEG, PNG, etc.)');
+                        return false;
+                    }
+                    if (file.size > 5 * 1024 * 1024) { // 5MB
+                        showError(field, errorElement, 'Image size should be less than 5MB');
+                        return false;
+                    }
+                }
+                break;
+                
+            case 'role':
+                if (field.value === '') {
+                    showError(field, errorElement, 'Please select a role');
+                    return false;
+                }
+                break;
+        }
+        
+        // If all validations pass
+        clearError(field, errorElement);
+        return true;
+    }
+    
+    function showError(field, errorElement, message) {
+        field.classList.add('is-invalid');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+    }
+    
+    function clearError(field, errorElement) {
+        field.classList.remove('is-invalid');
+        if (errorElement) {
+            errorElement.style.display = 'none';
+        }
+    }
+    
+    // Special handling for radio buttons
+    const genderRadios = document.querySelectorAll('input[name="gender"]');
+    const genderError = document.getElementById('gender_error');
+    
+    genderRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (document.querySelector('input[name="gender"]:checked')) {
+                genderError.style.display = 'none';
+                genderRadios.forEach(r => r.classList.remove('is-invalid'));
+            }
+        });
+    });
+    
+    // Prevent space key in certain fields
+    const noSpaceFields = ['phone', 'pincode', 'password', 'confirm_password'];
+    noSpaceFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('keydown', function(e) {
+                if (e.key === ' ') {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

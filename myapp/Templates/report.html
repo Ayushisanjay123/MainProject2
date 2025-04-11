@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Report{% endblock %}
+{% block content %}
+<div class="card shadow p-4 mb-5 bg-white rounded">
+    <h2 class="text-center mb-4">Land Usage Report</h2>
+    <p><strong>Report ID:</strong> {{ report.id }}</p>
+    <p><strong>Land ID:</strong> {{ report.land_id }}</p>
+    <p><strong>Landowner:</strong> {{ report.landowner_name }}</p>
+    <p><strong>Land Seeker:</strong> {{ report.landseeker_name }}</p>
+    <p><strong>Duration:</strong> {{ report.duration }} months</p>
+    <p><strong>Summary:</strong></p>
+    <p>{{ report.summary }}</p>
+    <p><strong>Created On:</strong> {{ report.created_at }}</p>
+</div>
+{% endblock %}

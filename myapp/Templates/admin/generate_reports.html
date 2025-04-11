@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate Reports - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">System Reports</h2>
+
+    <div class="row">
+        <!-- User Statistics -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>User Statistics</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Users
+                            <span class="badge bg-primary rounded-pill">{{ total_users }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Landowners
+                            <span class="badge bg-success rounded-pill">{{ landowners_count }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Landseekers
+                            <span class="badge bg-info rounded-pill">{{ landseekers_count }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Brokers
+                            <span class="badge bg-warning rounded-pill">{{ brokers_count }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Land Statistics -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Land Statistics</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Lands Listed
+                            <span class="badge bg-primary rounded-pill">{{ total_lands }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Interests
+                            <span class="badge bg-success rounded-pill">{{ total_interests }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Agreements
+                            <span class="badge bg-info rounded-pill">{{ total_agreements }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Options -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Export Reports</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100" onclick="exportReport('users')">
+                        <i class="fas fa-users"></i> Export User Report
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-success w-100" onclick="exportReport('lands')">
+                        <i class="fas fa-map-marker-alt"></i> Export Land Report
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-info w-100" onclick="exportReport('agreements')">
+                        <i class="fas fa-file-contract"></i> Export Agreements Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function exportReport(type) {
+    // TODO: Implement report export functionality
+    alert('Report export functionality will be implemented soon!');
+}
+</script>
+{% endblock %}
+{% endblock %} 

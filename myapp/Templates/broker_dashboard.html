@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Broker Dashboard</h2>
+
+  <h4>Active Agreements</h4>
+  <ul>
+    {% for agreement in agreements %}
+      <li>
+        Agreement for <strong>{{ agreement.land.location }}</strong><br>
+        Landowner: {{ agreement.landowner.user.first_name }}<br>
+        Seeker: {{ agreement.landseeker.first_name }} {{ agreement.landseeker.last_name }}<br>
+        Duration: {{ agreement.start_date }} to {{ agreement.end_date }}
+      </li>
+    {% empty %}
+      <li>No active agreements.</li>
+    {% endfor %}
+  </ul>
+
+  <h4>Payments</h4>
+  <ul>
+    {% for payment in payments %}
+      <li>
+        Payment of ₹{{ payment.amount }} by {{ payment.paid_by.email }} 
+        for {{ payment.agreement.land.location }} - Status: {{ payment.status }}
+      </li>
+    {% empty %}
+      <li>No payments recorded yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

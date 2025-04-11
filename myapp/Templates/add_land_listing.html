@@ -1,0 +1,52 @@
+<!-- templates/add_land_listing.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Add New Land Listing</h2>
+    <div class="card">
+        <div class="card-body">
+            <form method="post" action="{% url 'add_land_listing1' %}"enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="land_name">Land Name</label>
+                    <input type="text" id="land_name" name="land_name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="size">Size (in acres)</label>
+                    <input type="number" step="0.01" id="size" name="size" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="soil_type">Soil Type</label>
+                    <input type="text" id="soil_type" name="soil_type" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="water_availability">Water Availability</label>
+                    <input type="text" id="water_availability" name="water_availability" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">Land Image</label>
+                    <input type="file" id="image" name="image" class="form-control-file">
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit Listing</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

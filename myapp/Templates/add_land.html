@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Add Land{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Add New Land</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3"><label>Location</label><input type="text" name="location" class="form-control" required></div>
+        <div class="mb-3"><label>Size (in acres)</label><input type="number" name="size" step="0.1" class="form-control" required></div>
+        <div class="mb-3"><label>Soil Type</label><input type="text" name="soil_type" class="form-control" required></div>
+        <div class="mb-3"><label>Water Availability</label><input type="checkbox" name="water_availability" class="form-check-input"></div>
+        <div class="mb-3"><label>Land Available</label><input type="checkbox" name="is_available" class="form-check-input"></div>
+        <div class="mb-3"><label>Price</label><input type="number" name="price" class="form-control" required></div>
+        <div class="mb-3"><label>Description</label><textarea name="description" class="form-control" rows="4"></textarea></div>
+        <div class="mb-3"><label>Image</label><input type="file" name="image" class="form-control"></div>
+        <button type="submit" class="btn btn-success">Add Land</button>
+    </form>
+</div>
+{% endblock %}

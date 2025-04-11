@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Land Seeker Profile</h2>
+  <div class="card p-4 shadow rounded">
+    <div class="row">
+      <div class="col-md-4">
+        <img src="{{ user.photo.url }}" alt="Profile Photo" class="img-fluid rounded-circle" width="200">
+      </div>
+      <div class="col-md-8">
+        <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ user.phone }}</p>
+        <p><strong>Address:</strong> {{ user.address }}</p>
+        <p><strong>Pincode:</strong> {{ user.pincode }}</p>
+        <p><strong>Gender:</strong> {{ user.gender }}</p>
+        <p><strong>Date of Birth:</strong> {{ landseeker.date_of_birth }}</p>
+        <p><strong>Agricultural Expanse ID:</strong> {{ landseeker.agricultural_expanse_id }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

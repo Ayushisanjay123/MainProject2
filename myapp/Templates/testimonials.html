@@ -1,0 +1,19 @@
+<!-- myapp/templates/testimonials.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Testimonials</title>
+</head>
+<body>
+    <h1>Testimonials</h1>
+    <ul>
+        {% for testimonial in testimonials %}
+        <li>
+            <h2>{{ testimonial.name }}</h2>
+            <p>{{ testimonial.feedback }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'index' %}">Back to Home</a>
+</body>
+</html>

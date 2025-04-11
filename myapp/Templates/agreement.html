@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Agreement{% endblock %}
+{% block content %}
+<div class="card shadow p-4 mb-5 bg-white rounded">
+    <h2 class="text-center mb-4">Rental Agreement</h2>
+    <p><strong>Landowner:</strong> {{ agreement.landowner_name }}</p>
+    <p><strong>Land Seeker:</strong> {{ agreement.landseeker_name }}</p>
+    <p><strong>Land ID:</strong> {{ agreement.land_id }}</p>
+    <p><strong>Rental Duration:</strong> {{ agreement.duration }} months</p>
+    <p><strong>Terms & Conditions:</strong></p>
+    <ul>
+        <li>{{ agreement.terms }}</li>
+    </ul>
+    <p><strong>Date:</strong> {{ agreement.date }}</p>
+</div>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Landseeker Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Landseeker Dashboard</h2>
+    
+    <!-- Profile Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>My Profile</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Contact:</strong> {{ user.landseeker.contact }}</p>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'edit_landseeker_profile' %}" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Lands Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Available Lands</h4>
+        </div>
+        <div class="card-body">
+            {% if available_lands %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Size (acres)</th>
+                                <th>Soil Type</th>
+                                <th>Water Available</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for land in available_lands %}
+                                <tr>
+                                    <td>{{ land.location }}</td>
+                                    <td>{{ land.size }}</td>
+                                    <td>{{ land.soil_type }}</td>
+                                    <td>{{ land.water_availability|yesno:"Yes,No" }}</td>
+                                    <td>
+                                        <a href="{% url 'land_details' land.id %}" class="btn btn-sm btn-info">View Details</a>
+                                        <a href="{% url 'express_interest' land.id %}" class="btn btn-sm btn-primary">Express Interest</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No lands available at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- My Interests Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>My Interests</h4>
+        </div>
+        <div class="card-body">
+            {% if interests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Land Location</th>
+                                <th>Size (acres)</th>
+                                <th>Date Expressed</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for interest in interests %}
+                                <tr>
+                                    <td>{{ interest.land.location }}</td>
+                                    <td>{{ interest.land.size }}</td>
+                                    <td>{{ interest.expressed_on|date:"M d, Y" }}</td>
+                                    <td>{{ interest.status }}</td>
+                                    <td>
+                                        <a href="{% url 'land_details' interest.land.id %}" class="btn btn-sm btn-info">View Details</a>
+                                        {% if interest.status == 'pending' %}
+                                            <a href="{% url 'withdraw_interest' interest.id %}" class="btn btn-sm btn-danger">Withdraw</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>You haven't expressed interest in any lands yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

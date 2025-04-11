@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Landowner Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+        <h2>Landowner Dashboard</h2>
+    
+    <!-- Add New Land Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Add New Land</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'add_land' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="size" class="form-label">Size (acres)</label>
+                        <input type="number" step="0.01" class="form-control" id="size" name="size" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="soil_type" class="form-label">Soil Type</label>
+                        <input type="text" class="form-control" id="soil_type" name="soil_type" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Water Availability</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="water_availability" name="water_availability">
+                            <label class="form-check-label" for="water_availability">Water Available</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Land</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- My Lands Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>My Lands</h4>
+        </div>
+        <div class="card-body">
+        {% if lands %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Size (acres)</th>
+                                <th>Soil Type</th>
+                                <th>Water Available</th>
+                                <th>Actions</th>
+            </tr>
+                        </thead>
+                        <tbody>
+            {% for land in lands %}
+            <tr>
+                <td>{{ land.location }}</td>
+                <td>{{ land.size }}</td>
+                                    <td>{{ land.soil_type }}</td>
+                <td>{{ land.water_availability|yesno:"Yes,No" }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_land' land.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                        <a href="{% url 'delete_land' land.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                    </td>
+            </tr>
+            {% endfor %}
+                        </tbody>
+        </table>
+                </div>
+        {% else %}
+        <p>You haven't added any lands yet.</p>
+        {% endif %}
+        </div>
+    </div>
+
+    <!-- Interests Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Interests from Land Seekers</h4>
+        </div>
+        <div class="card-body">
+        {% if interests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+            <tr>
+                <th>Land Location</th>
+                <th>Seeker Name</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+            </tr>
+                        </thead>
+                        <tbody>
+            {% for interest in interests %}
+            <tr>
+                <td>{{ interest.land.location }}</td>
+                                    <td>{{ interest.seeker.user.first_name }} {{ interest.seeker.user.last_name }}</td>
+                                    <td>{{ interest.expressed_on|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'land_details' interest.land.id %}" class="btn btn-sm btn-info">View Details</a>
+                                    </td>
+            </tr>
+            {% endfor %}
+                        </tbody>
+        </table>
+                </div>
+        {% else %}
+        <p>No interests received yet.</p>
+        {% endif %}
+    </div>
+    </div>
+</div>
+{% endblock %}
