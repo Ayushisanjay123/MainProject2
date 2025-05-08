@@ -19,7 +19,8 @@ from .models import (
 # ---------- Public Views ----------
 
 def index(request):
-    return render(request, 'index.html')
+    context = {}  # Add any context data here if needed
+    return render(request, 'index.html', context)
 
 def services(request):
     return render(request, 'services.html')
