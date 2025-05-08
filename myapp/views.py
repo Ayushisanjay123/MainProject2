@@ -20,7 +20,16 @@ from .models import (
 
 def index(request):
     context = {}  # Add any context data here if needed
-    return render(request, 'index.html', context)
+    try:
+        return render(request, 'index.html', context)
+    except Exception as e:
+        # Fallback - try alternative template locations
+        try:
+            return render(request, 'myapp/templates/index.html', context)
+        except Exception as e2:
+            # If both fail, return a simple HttpResponse as fallback
+            from django.http import HttpResponse
+            return HttpResponse("<h1>Welcome to the Agricultural Land Portal</h1><p>Template loading error. Please contact administrator.</p>")
 
 def services(request):
     return render(request, 'services.html')

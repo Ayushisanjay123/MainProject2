@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6^!i%o8806=6q*93!(chnf^*3u9mvoasmr8j5h9b5j1qyta%fk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']  # Add your domain or IP when deploying
 
@@ -44,6 +44,8 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'templates',
             BASE_DIR / 'myapp' / 'templates',
+            BASE_DIR / 'myapp',
+            BASE_DIR,
         ],
         'APP_DIRS': True,
         'OPTIONS': {

@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: django-agricultural-land
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn myproject.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: DJANGO_SETTINGS_MODULE
+        value: myproject.settings
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        sync: false
+    staticPublishPath: ./staticfiles
