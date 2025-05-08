@@ -27,6 +27,7 @@ AUTH_USER_MODEL = 'myapp.MyUser'  # Custom user model
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,6 +82,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'myapp' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Needed for collectstatic in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (uploads like photos)
 MEDIA_URL = '/media/'
