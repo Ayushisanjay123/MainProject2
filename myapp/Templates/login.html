@@ -1,8 +1,20 @@
-{% extends 'base.html' %}
-
-{% block title %}Login{% endblock %}
+{% block title %}
+<table border="0" width="100%" bgcolor="green">
+    <tr bgcolor="green" >
+        <td><font size=6 color='white'>YieldHub</font></td>
+        <td>
+              <a href="{% url 'index' %}">Home</a></li>
+            <td><a href="{% url 'services' %}">Our Services</a></li>
+                <td>   <a href="{% url 'contact' %}">Contact</a></li>
+                    <td> <a href="{% url 'faq' %}">FAQ</a></li>
+                        <td>   <a href="{% url 'login' %}">Login</a></li>
+                            <td> <a href="{% url 'register' %}">Register</a></li>
+           
+    </table>
+{% endblock %}
 
 {% block extra_css %}
+
 <style>
     :root {
         --primary-color: #6c5ce7;
@@ -109,12 +121,14 @@
                 </div>
                 <button type="submit" class="btn-login">Log In</button>
             </form>
+            {% if error %}
+            <p style="color: red; text-align: center;">{{ error }}</p>
+            {% endif %}
             <div class="register-link">
                 Don't have an account? <a href="{% url 'register' %}">Sign up</a>
             </div>
             <div class="admin-link">
                 Are you an admin? <a href="{% url 'admin_login' %}">Log in here</a>
-
             </div>
         </div>
     </div>

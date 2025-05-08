@@ -1,0 +1,13 @@
+<h2>Your Inbox</h2>
+<ul>
+    {% for message in messages %}
+        <li>
+            <strong>From:</strong> {{ message.sender.email }}<br>
+            <strong>Time:</strong> {{ message.timestamp|date:"d M Y, H:i" }}<br>
+            <strong>Message:</strong> {{ message.content }}
+        </li>
+        <hr>
+    {% empty %}
+        <p>No messages yet.</p>
+    {% endfor %}
+</ul>

@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interest Details</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9fff9;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        h2 {
+            color: #2d572c;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h4 {
+            margin-bottom: 10px;
+            color: #4e7332;
+        }
+        .btn-outline-info {
+            padding: 8px 16px;
+            border: 1px solid #17a2b8;
+            color: #17a2b8;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .btn-outline-info:hover {
+            background-color: #17a2b8;
+            color: white;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        td a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <table border="0" bgcolor="green">
+        <tr>
+            <td><font size="6" color="white"><strong>YieldHub</strong></font></td>
+            <td><a class="nav-link" href="{% url 'landowner_dashboard' %}">Home</a></td>
+            <td><a class="nav-link" href="{% url 'newland' %}">Add Land</a></td>
+            <td><a class="nav-link" href="{% url 'mylands' %}">My Lands</a></td>
+            <td><a class="nav-link" href="{% url 'landowner_profile' %}">Profile</a></td>
+            <td><a class="nav-link" href="{% url 'my_interests' %}">Landseekers Interest</a></td>
+        </tr>
+    </table>
+
+    <!-- Content Card -->
+    <div class="card">
+        <h2><i class="fas fa-user"></i> LandSeeker Details</h2>
+
+        <div class="section">
+            <h4>Name:</h4>
+            <p>{{ seeker.user.first_name }} {{ seeker.user.last_name }}</p>
+        </div>
+
+        <div class="section">
+            <h4>Email:</h4>
+            <p>{{ seeker.user.email }}</p>
+        </div>
+
+        <div class="section">
+            <h4>Phone:</h4>
+            <p>{{ seeker.phone }}</p>
+        </div>
+
+        <div class="section">
+            <h4>Address:</h4>
+            <p>{{ seeker.address }}</p>
+        </div>
+
+        <div class="section">
+            <h4>Agricultural Expanse ID:</h4>
+            <p>{{ seeker.agricultural_expanse_id }}</p>
+        </div>
+
+        <hr>
+
+        <h2><i class="fas fa-map"></i> Land Details</h2>
+
+        <div class="section">
+            <h4>Location:</h4>
+            <p>{{ land.location }}</p>
+        </div>
+
+        <div class="section">
+            <h4>Size:</h4>
+            <p>{{ land.size }} acres</p>
+        </div>
+
+        <div class="section">
+            <h4>Price:</h4>
+            <p>₹{{ land.price }}</p>
+        </div>
+
+        <div class="section">
+            <h4>Date of Interest:</h4>
+            <p>{{ interest.expressed_on|date:"M d, Y" }}</p>
+        </div>
+
+        <!-- Message Button -->
+        <div class="section">
+            <a href="{% url 'send_message' seeker.user.id %}" class="btn btn-outline-info">
+                <i class="fas fa-comment-alt"></i> Send Message
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

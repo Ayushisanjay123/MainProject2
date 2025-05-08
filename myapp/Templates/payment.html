@@ -1,0 +1,65 @@
+{% extends 'base1.html' %}
+
+{% block title %}Landseeker Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>.</h2>
+    
+    
+
+   
+    <!-- Available Lands Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Payment Manage</h4>
+        </div>
+        <div class="card-body">
+            {% if available_lands %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Slno</th>
+                                <th>Location</th>
+                                <th>Size (acres)</th>
+                                <th>Soil Type</th>
+                                <th>Water Available</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for land in available_lands %}
+                                <tr>
+                                    <td>{{ forloop.counter}}</td>
+                                    <td>{{ land.location }}</td>
+                                    <td>{{ land.size }}</td>
+                                    <td>{{ land.soil_type }}</td>
+                                    <td>{{ land.water_availability|yesno:"Yes,No" }}</td>
+                                    <td>
+                                        <a href="{% url 'land_details' land.id %}" class="btn btn-sm btn-info">View Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>.</p>
+                <p>.</p>
+                <p>.</p>
+                <p>.</p>
+
+                <p>.</p>
+
+                <p>.</p>
+
+                <p>.</p>
+
+            {% endif %}
+        </div>
+    </div>
+
+        </div>
+</div>
+{% endblock %}

@@ -1,8 +1,8 @@
-<!-- templates/edit_landseeker_profile.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Land Seeker Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -21,6 +21,7 @@
         h2 {
             text-align: center;
             margin-bottom: 30px;
+            color: #2e7d32;
         }
         .form-control, .form-select {
             border-radius: 10px;
@@ -28,73 +29,318 @@
         .btn-primary {
             border-radius: 10px;
             width: 100%;
+            background-color: #45b649;
+            border-color: #45b649;
+        }
+        .btn-primary:hover {
+            background-color: #2e7d32;
+            border-color: #2e7d32;
+        }
+        .invalid-feedback {
+            display: none;
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+        .is-invalid {
+            border-color: #dc3545;
+        }
+        .navbar {
+            background-color: #2e7d32;
+            padding: 10px 0;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0 15px;
+        }
+        .navbar a:hover {
+            color: #dce35b;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            padding-left: 15px;
+        }
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="form-container">
-        <h2>Edit Land Seeker Profile</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <div class="mb-3">
-                <label for="first_name" class="form-label">First Name</label>
-                <input type="text" class="form-control" name="first_name" id="first_name" value="{{ landseeker.first_name }}">
+    <nav class="navbar">
+        <div class="container-fluid">
+            <span class="logo">YieldHub</span>
+            <div class="d-flex">
+                <a href="{% url 'landseeker_dashboard' %}">Home</a>
+                <a href="{% url 'land_search' %}">Search</a>
+                <a href="{% url 'landseeker_profile' %}">Profile</a>
+                <a href="{% url 'my_interests' %}">My Interest</a>
+                <a href="{% url 'login' %}">Logout</a>
             </div>
+        </div>
+    </nav>
 
-            <div class="mb-3">
-                <label for="last_name" class="form-label">Last Name</label>
-                <input type="text" class="form-control" name="last_name" id="last_name" value="{{ landseeker.last_name }}">
-            </div>
+    <div class="container">
+        <div class="form-container">
+            <h2>Edit Land Seeker Profile</h2>
+            <form id="editProfileForm" method="POST" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
 
-            <div class="mb-3">
-                <label for="date_of_birth" class="form-label">Date of Birth</label>
-                <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" value="{{ landseeker.date_of_birth|date:'Y-m-d' }}">
-            </div>
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">First Name*</label>
+                    <input type="text" class="form-control" name="first_name" id="first_name" value="{{ landseeker.first_name }}" required>
+                    <div class="invalid-feedback">Please enter your first name.</div>
+                </div>
 
-            <div class="mb-3">
-                <label for="address" class="form-label">Address</label>
-                <textarea class="form-control" name="address" id="address" rows="3">{{ landseeker.address }}</textarea>
-            </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Last Name*</label>
+                    <input type="text" class="form-control" name="last_name" id="last_name" value="{{ landseeker.last_name }}" required>
+                    <div class="invalid-feedback">Please enter your last name.</div>
+                </div>
 
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" name="phone" id="phone" value="{{ landseeker.phone }}">
-            </div>
+                <div class="mb-3">
+                    <label for="date_of_birth" class="form-label">Date of Birth*</label>
+                    <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" value="{{ landseeker.date_of_birth|date:'Y-m-d' }}" required>
+                    <div class="invalid-feedback">Please enter a valid date of birth (18+ years old).</div>
+                </div>
 
-            <div class="mb-3">
-                <label for="pincode" class="form-label">Pincode</label>
-                <input type="text" class="form-control" name="pincode" id="pincode" value="{{ landseeker.pincode }}">
-            </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address*</label>
+                    <textarea class="form-control" name="address" id="address" rows="3" required>{{ landseeker.address }}</textarea>
+                    <div class="invalid-feedback">Please enter your address.</div>
+                </div>
 
-            <div class="mb-3">
-                <label for="gender" class="form-label">Gender</label>
-                <select class="form-select" name="gender" id="gender">
-                    <option value="Male" {% if landseeker.gender == "Male" %}selected{% endif %}>Male</option>
-                    <option value="Female" {% if landseeker.gender == "Female" %}selected{% endif %}>Female</option>
-                    <option value="Other" {% if landseeker.gender == "Other" %}selected{% endif %}>Other</option>
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number*</label>
+                    <input type="text" class="form-control" name="phone" id="phone" required value="7995645286" >
+                    <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+                </div>
 
-            <div class="mb-3">
-                <label for="agricultural_expanse_id" class="form-label">Agricultural Expanse ID</label>
-                <input type="text" class="form-control" name="agricultural_expanse_id" id="agricultural_expanse_id" value="{{ landseeker.agricultural_expanse_id }}">
-            </div>
+                <div class="mb-3">
+                    <label for="pincode" class="form-label">Pincode*</label>
+                    <input type="text" class="form-control" name="pincode" id="pincode" required value="686302" ></text>
+                    <div class="invalid-feedback">Please enter a valid 6-digit pincode.</div>
+                </div>
 
-            <div class="mb-3">
-                <label for="photo" class="form-label">Profile Photo</label>
-                <input type="file" class="form-control" name="photo" id="photo">
-                {% if landseeker.photo %}
-                    <img src="{{ landseeker.photo.url }}" class="img-thumbnail mt-2" width="100">
-                {% endif %}
-            </div>
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender*</label>
+                    <select class="form-select" name="gender" id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male" {% if landseeker.gender == "Male" %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if landseeker.gender == "Female" %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if landseeker.gender == "Other" %}selected{% endif %}>Other</option>
+                    </select>
+                    <div class="invalid-feedback">Please select your gender.</div>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Update Profile</button>
-        </form>
+              
+
+                <div class="mb-3">
+                    <label for="photo" class="form-label">Profile Photo</label>
+                    <input type="file" class="form-control" name="photo" id="photo" accept="image/*">
+                    <div class="invalid-feedback">Please upload an image file (jpg, png, jpeg).</div>
+                    {% if landseeker.photo %}
+                        <img src="{{ landseeker.photo.url }}" class="preview-image" id="currentPhoto" alt="Current profile photo">
+                    {% endif %}
+                    <div id="photoPreviewContainer" class="mt-2" style="display: none;">
+                        <img id="photoPreview" class="preview-image" alt="Profile photo preview">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+                
+                <div class="alert alert-success" id="successMessage" style="display: none;">
+                    Profile updated successfully!
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('editProfileForm');
+            
+            // For photo preview
+            const photoInput = document.getElementById('photo');
+            const photoPreview = document.getElementById('photoPreview');
+            const photoPreviewContainer = document.getElementById('photoPreviewContainer');
+            
+            photoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        photoPreview.src = e.target.result;
+                        photoPreviewContainer.style.display = 'block';
+                        
+                        // Hide current photo if exists
+                        const currentPhoto = document.getElementById('currentPhoto');
+                        if (currentPhoto) {
+                            currentPhoto.style.display = 'none';
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Form validation
+            form.addEventListener('submit', function(event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+            
+            function validateForm() {
+                let isValid = true;
+                
+                // First Name validation
+                const firstName = document.getElementById('first_name');
+                if (!firstName.value.trim()) {
+                    showError(firstName, 'Please enter your first name.');
+                    isValid = false;
+                } else if (!/^[A-Za-z\s]{2,30}$/.test(firstName.value.trim())) {
+                    showError(firstName, 'First name should be 2-30 characters and contain only letters.');
+                    isValid = false;
+                } else {
+                    removeError(firstName);
+                }
+                
+                // Last Name validation
+                const lastName = document.getElementById('last_name');
+                if (!lastName.value.trim()) {
+                    showError(lastName, 'Please enter your last name.');
+                    isValid = false;
+                } else if (!/^[A-Za-z\s]{2,30}$/.test(lastName.value.trim())) {
+                    showError(lastName, 'Last name should be 2-30 characters and contain only letters.');
+                    isValid = false;
+                } else {
+                    removeError(lastName);
+                }
+                
+                // Date of Birth validation
+                const dob = document.getElementById('date_of_birth');
+                if (!dob.value) {
+                    showError(dob, 'Please enter your date of birth.');
+                    isValid = false;
+                } else {
+                    const birthDate = new Date(dob.value);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    
+                    if (age < 18) {
+                        showError(dob, 'You must be at least 18 years old.');
+                        isValid = false;
+                    } else if (age > 100) {
+                        showError(dob, 'Please enter a valid date of birth.');
+                        isValid = false;
+                    } else {
+                        removeError(dob);
+                    }
+                }
+                
+                // Address validation
+                const address = document.getElementById('address');
+                if (!address.value.trim()) {
+                    showError(address, 'Please enter your address.');
+                    isValid = false;
+                } else if (address.value.trim().length < 10) {
+                    showError(address, 'Address should be at least 10 characters long.');
+                    isValid = false;
+                } else {
+                    removeError(address);
+                }
+                
+                // Phone validation
+                const phone = document.getElementById('phone');
+                if (!phone.value.trim()) {
+                    showError(phone, 'Please enter your phone number.');
+                    isValid = false;
+                } else if (!/^\d{10}$/.test(phone.value.trim())) {
+                    showError(phone, 'Please enter a valid 10-digit phone number.');
+                    isValid = false;
+                } else {
+                    removeError(phone);
+                }
+                
+                // Pincode validation
+                const pincode = document.getElementById('pincode');
+                if (!pincode.value.trim()) {
+                    showError(pincode, 'Please enter your pincode.');
+                    isValid = false;
+                } else if (!/^\d{6}$/.test(pincode.value.trim())) {
+                    showError(pincode, 'Please enter a valid 6-digit pincode.');
+                    isValid = false;
+                } else {
+                    removeError(pincode);
+                }
+                
+                // Gender validation
+                const gender = document.getElementById('gender');
+                if (!gender.value) {
+                    showError(gender, 'Please select your gender.');
+                    isValid = false;
+                } else {
+                    removeError(gender);
+                }
+                
+                // Agricultural Expanse ID validation (optional)
+                const agriId = document.getElementById('agricultural_expanse_id');
+                if (agriId.value.trim() && !/^[A-Za-z0-9]{5,15}$/.test(agriId.value.trim())) {
+                    showError(agriId, 'Agricultural Expanse ID should be 5-15 alphanumeric characters.');
+                    isValid = false;
+                } else {
+                    removeError(agriId);
+                }
+                
+                // Photo validation (optional)
+                const photo = document.getElementById('photo');
+                if (photo.files.length > 0) {
+                    const file = photo.files[0];
+                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                    if (!validTypes.includes(file.type)) {
+                        showError(photo, 'Please upload a valid image file (jpg, png, jpeg).');
+                        isValid = false;
+                    } else if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        showError(photo, 'Image size should be less than 5MB.');
+                        isValid = false;
+                    } else {
+                        removeError(photo);
+                    }
+                } else {
+                    removeError(photo);
+                }
+                
+                return isValid;
+            }
+            
+            function showError(input, message) {
+                input.classList.add('is-invalid');
+                const invalidFeedback = input.nextElementSibling;
+                if (invalidFeedback && invalidFeedback.classList.contains('invalid-feedback')) {
+                    invalidFeedback.textContent = message;
+                    invalidFeedback.style.display = 'block';
+                }
+            }
+            
+            function removeError(input) {
+                input.classList.remove('is-invalid');
+                const invalidFeedback = input.nextElementSibling;
+                if (invalidFeedback && invalidFeedback.classList.contains('invalid-feedback')) {
+                    invalidFeedback.style.display = 'none';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

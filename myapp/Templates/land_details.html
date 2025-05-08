@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base1.html' %}
 {% block title %}Land Details{% endblock %}
 {% block content %}
 <div class="container mt-4">
@@ -63,9 +63,14 @@
             <div class="card">
                 <div class="card-header">
                     <h4>Interests</h4>
+                    
+                    <a href="{% url 'express_interest' land.id %}" class="btn btn-sm btn-primary">Express Interest</a>
+
                 </div>
                 <div class="card-body">
+
                     {% if interests %}
+
                     <p><strong>{{ interests|length }}</strong> people have expressed interest in this land.</p>
                     {% if user.is_authenticated and user.userprofile.role == 'landowner' and land.owner.user == user %}
                     <div class="list-group">
@@ -79,6 +84,7 @@
                     </div>
                     {% endif %}
                     {% else %}
+                    
                     <p>No interests yet.</p>
                     {% endif %}
                 </div>

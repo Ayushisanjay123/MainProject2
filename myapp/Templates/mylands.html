@@ -1,0 +1,398 @@
+{% extends 'base2.html' %}
+
+{% block title %}Landowner Dashboard{% endblock %}
+
+{% block content %}
+<div class="background-image"></div> <!-- Pseudo-element for background image -->
+
+<div class="container mt-4">
+    <div class="dashboard-header mb-5 text-center">
+        <h2 class="display-5 fw-bold text-success mb-3">
+            <i class="fas fa-tractor me-2"></i> Agricultural Land Management
+        </h2>
+        <p class="lead text-muted">Manage your lands and farming opportunities</p>
+        <div class="header-divider">
+            <div class="divider-line bg-success"></div>
+            <i class="fas fa-leaf divider-icon bg-white text-success"></i>
+            <div class="divider-line bg-success"></div>
+        </div>
+    </div>
+    
+    <!-- My Lands Section -->
+    <div class="card mb-5 border-primary shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-map-marked-alt me-2"></i> My Agricultural Lands
+                </h4>
+                <span class="badge bg-white text-primary fs-6">{{ lands.count }} registered</span>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if lands %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="border-end"><i class="fas fa-map-marker-alt me-1 text-success"></i> Location</th>
+                            <th class="border-end"><i class="fas fa-ruler-combined me-1 text-success"></i> Size</th>
+                            <th class="border-end"><i class="fas fa-seedling me-1 text-success"></i> Soil Type</th>
+                            <th class="border-end"><i class="fas fa-tint me-1 text-primary"></i> Water</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for land in lands %}
+                        <tr class="land-row">
+                            <td class="border-end">
+                                <strong>{{ land.location }}</strong>
+                                {% if land.water_availability %}
+                                <span class="badge bg-success bg-opacity-10 text-success ms-2">Irrigated</span>
+                                {% endif %}
+                            </td>
+                            <td class="border-end">{{ land.size }} acres</td>
+                            <td class="border-end">
+                                <span class="badge bg-success bg-opacity-10 text-success">
+                                    {{ land.soil_type|title }}
+                                </span>
+                            </td>
+                            <td class="border-end">
+                                {% if land.water_availability %}
+                                <span class="text-success"><i class="fas fa-check-circle"></i> Available</span>
+                                {% else %}
+                                <span class="text-secondary"><i class="fas fa-times-circle"></i> Not Available</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'edit_land' land.id %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_land' land.id %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state text-center py-5">
+                <div class="empty-state-icon bg-success bg-opacity-10">
+                    <i class="fas fa-map-marked-alt fa-3x text-success"></i>
+                </div>
+                <h4 class="mt-4 text-muted">No Lands Registered Yet</h4>
+                <p class="text-muted">Start by adding your first agricultural land above</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    
+
+<!-- Validation Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('landRegistrationForm');
+    const errorContainer = document.getElementById('formErrors');
+    const errorList = document.getElementById('errorList');
+    
+    // Real-time validation for key fields
+    document.getElementById('location').addEventListener('input', validateLocation);
+    document.getElementById('size').addEventListener('input', validateSize);
+    document.getElementById('soil_type').addEventListener('change', validateSoilType);
+    
+    function validateLocation() {
+        const field = document.getElementById('location');
+        field.classList.remove('is-valid', 'is-invalid');
+        if (field.value.trim().length >= 3 && /^[A-Za-z0-9\s,.-]+$/.test(field.value)) {
+            field.classList.add('is-valid');
+        } else if (field.value.trim() !== '') {
+            field.classList.add('is-invalid');
+        }
+    }
+    
+    function validateSize() {
+        const field = document.getElementById('size');
+        field.classList.remove('is-valid', 'is-invalid');
+        const value = parseFloat(field.value);
+        if (!isNaN(value) && value >= 0.1 && value <= 10000) {
+            field.classList.add('is-valid');
+        } else if (field.value.trim() !== '') {
+            field.classList.add('is-invalid');
+        }
+    }
+    
+    function validateSoilType() {
+        const field = document.getElementById('soil_type');
+        field.classList.remove('is-valid', 'is-invalid');
+        if (field.value !== '') {
+            field.classList.add('is-valid');
+        }
+    }
+    
+    // Form submission validation
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        let isValid = true;
+        const errors = [];
+        
+        // Clear previous errors
+        errorList.innerHTML = '';
+        errorContainer.classList.add('d-none');
+        
+        // Validate required fields
+        const location = document.getElementById('location');
+        const size = document.getElementById('size');
+        const soilType = document.getElementById('soil_type');
+        
+        // Location validation
+        if (location.value.trim() === '') {
+            errors.push('Location is required');
+            location.classList.add('is-invalid');
+            isValid = false;
+        } else if (location.value.trim().length < 3 || !/^[A-Za-z0-9\s,.-]+$/.test(location.value)) {
+            errors.push('Location must be at least 3 characters with only letters, numbers, spaces, commas, periods, or hyphens');
+            location.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            location.classList.add('is-valid');
+        }
+        
+        // Size validation
+        if (size.value.trim() === '') {
+            errors.push('Land size is required');
+            size.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            const sizeValue = parseFloat(size.value);
+            if (isNaN(sizeValue)) {
+                errors.push('Land size must be a number');
+                size.classList.add('is-invalid');
+                isValid = false;
+            } else if (sizeValue < 0.1) {
+                errors.push('Land size must be at least 0.1 acres');
+                size.classList.add('is-invalid');
+                isValid = false;
+            } else if (sizeValue > 10000) {
+                errors.push('Land size cannot exceed 10,000 acres');
+                size.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                size.classList.add('is-valid');
+            }
+        }
+        
+        // Soil type validation
+        if (soilType.value === '') {
+            errors.push('Soil type is required');
+            soilType.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            soilType.classList.add('is-valid');
+        }
+        
+        // Display errors if any
+        if (errors.length > 0) {
+            errorContainer.classList.remove('d-none');
+            errors.forEach(error => {
+                const li = document.createElement('li');
+                li.textContent = error;
+                errorList.appendChild(li);
+            });
+            
+            // Scroll to errors
+            errorContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Submit if valid
+        if (isValid) {
+            form.submit();
+        }
+    });
+});
+</script>
+
+{% load static %}
+<style>
+/* Color Scheme */
+:root {
+    --agri-green: #28a745;
+    --agri-green-light: #e8f5e9;
+    --agri-dark: #1e5631;
+    --agri-gold:rgb(185, 7, 255);
+    --agri-blue: #17a2b8;
+}
+
+/* Background Image */
+body {
+    position: relative; /* Ensure the body is positioned relative for the pseudo-element */
+}
+
+.background-image {
+    background-image: url('{% static "images/img-2.jpg" %}'); /* Adjust the path as needed */
+    background-size: cover;
+    background-position: center bottom; /* Position the image at the bottom center */
+    background-repeat: no-repeat;
+    filter: blur(8px); /* Apply blur effect */
+    position: fixed; /* Fix the background image */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Send the background behind other content */
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    position: relative;
+    padding-bottom: 1.5rem;
+    z-index: 1; /* Bring header above background */
+}
+
+.header-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    max-width: 400px;
+}
+
+.divider-line {
+    height: 2px;
+    flex-grow: 1;
+}
+
+.divider-icon {
+    padding: 0 1rem;
+    font-size: 1.5rem;
+}
+
+/* Card Styles */
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    border-width: 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    padding: 1.25rem 1.5rem;
+    background-color: rgba(40, 167, 69, 0.9); /* Slightly transparent */
+}
+
+.bg-light-green {
+    background-color: rgba(40, 167, 69, 0.03);
+}
+
+/* Form Styles */
+.form-floating {
+    position: relative;
+}
+
+.form-floating label {
+    color: var(--agri-dark);
+    font-weight: normal; /* Set font weight to normal */
+    font-size: 1rem; /* Set a standard font size */
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 1rem 1rem;
+    border: 1px solid #dee2e6;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--agri-green);
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+}
+
+/* Table Styles */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: var(--agri-dark);
+}
+
+.land-row:hover {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+/* Badge Styles */
+.badge {
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.35em 0.65em;
+}
+
+/* Empty State */
+.empty-state {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Button Styles */
+.btn-success {
+    background-color: var(--agri-green);
+    border-color: var(--agri-green);
+}
+
+.btn-success:hover {
+    background-color: var(--agri-dark);
+    border-color: var(--agri-dark);
+}
+
+.btn-outline-success {
+    color: var(--agri-green);
+    border-color: var(--agri-green);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--agri-green);
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+}
+
+/* Floating label override for input groups */
+.floating-label-override {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 1rem 0.75rem;
+    pointer-events: none;
+    transform-origin: 0 0;
+    transition: opacity .1s ease-in-out,transform .1s ease-in-out;
+    color: rgba(33, 37, 41, 0.65);
+    font-size: 0.875em;
+}
+</style>
+{% endblock %}

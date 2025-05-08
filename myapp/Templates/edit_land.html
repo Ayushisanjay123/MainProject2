@@ -1,23 +1,220 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 {% block title %}Edit Land{% endblock %}
 {% block content %}
 <div class="container mt-4">
-    <h2>Edit Land</h2>
-    <form method="POST" enctype="multipart/form-data">
+    <h2 class="mb-4">Edit Agricultural Land</h2>
+    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
-        <div class="mb-3"><label>Location</label><input type="text" name="location" class="form-control" value="{{ land.location }}" required></div>
-        <div class="mb-3"><label>Size (in acres)</label><input type="number" name="size" step="0.1" class="form-control" value="{{ land.size }}" required></div>
-        <div class="mb-3"><label>Soil Type</label><input type="text" name="soil_type" class="form-control" value="{{ land.soil_type }}" required></div>
-        <div class="mb-3"><label>Water Availability</label><input type="checkbox" name="water_availability" class="form-check-input" {% if land.water_availability %}checked{% endif %}></div>
-        <div class="mb-3"><label>Land Available</label><input type="checkbox" name="is_available" class="form-check-input" {% if land.is_available %}checked{% endif %}></div>
-        <div class="mb-3"><label>Price</label><input type="number" name="price" class="form-control" value="{{ land.price }}" required></div>
-        <div class="mb-3"><label>Description</label><textarea name="description" class="form-control" rows="4">{{ land.description }}</textarea></div>
-        <div class="mb-3"><label>Image</label><input type="file" name="image" class="form-control"></div>
-        {% if land.image %}
-            <div class="mb-3"><img src="{{ land.image.url }}" width="150" class="img-thumbnail"></div>
-        {% endif %}
-        <button type="submit" class="btn btn-success">Update Land</button>
-        <a href="{% url 'view_my_lands' %}" class="btn btn-secondary">Cancel</a>
+        
+        <!-- Location Field -->
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input type="text" 
+                   name="location" 
+                   class="form-control"
+                   value="{{ land.location }}"
+                   pattern="^[A-Za-z\s]{3,50}$"
+                   title="3-50 characters, letters and spaces only"
+                   required
+                   oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+            <div class="invalid-feedback">
+                Please enter a valid location (3-50 characters, letters and spaces only)
+            </div>
+        </div>
+
+        <!-- Size Field -->
+        <div class="mb-3">
+            <label class="form-label">Size (acres)</label>
+            <input type="number" 
+                   name="size" 
+                   class="form-control"
+                   value="{{ land.size }}"
+                   min="0.1" 
+                   max="10000"
+                   step="0.1"
+                   required>
+            <div class="invalid-feedback">
+                Valid size required (0.1 - 10,000 acres)
+            </div>
+        </div>
+
+        <!-- Soil Type Field -->
+        <div class="mb-3">
+            <label class="form-label">Soil Type</label>
+            <select name="soil_type" class="form-select" required>
+                <option value="">Select soil type</option>
+                <option value="Loam" {% if land.soil_type == 'Loam' %}selected{% endif %}>Loam</option>
+                <option value="Clay" {% if land.soil_type == 'Clay' %}selected{% endif %}>Clay</option>
+                <option value="Sandy" {% if land.soil_type == 'Sandy' %}selected{% endif %}>Sandy</option>
+                <option value="Silt" {% if land.soil_type == 'Silt' %}selected{% endif %}>Silt</option>
+            </select>
+            <div class="invalid-feedback">
+                Please select a valid soil type
+            </div>
+        </div>
+
+        <!-- Water Availability -->
+        <div class="mb-3 form-check">
+            <input type="checkbox" 
+                   name="water_availability" 
+                   class="form-check-input" 
+                   {% if land.water_availability %}checked{% endif %}>
+            <label class="form-check-label">Water Availability</label>
+        </div>
+
+        <!-- Land Available -->
+        <div class="mb-3 form-check">
+            <input type="checkbox" 
+                   name="is_available" 
+                   class="form-check-input" 
+                   {% if land.is_available %}checked{% endif %}>
+            <label class="form-check-label">Land Available</label>
+        </div>
+
+        <!-- Price Field -->
+        <div class="mb-3">
+            <label class="form-label">Price (USD)</label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" 
+                       name="price" 
+                       class="form-control"
+                       value="{{ land.price }}"
+                       min="0"
+                       step="100"
+                       required>
+            </div>
+            <div class="invalid-feedback">
+                Valid price required (minimum $0)
+            </div>
+        </div>
+
+        <!-- Description Field -->
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" 
+                      class="form-control"
+                      rows="4"
+                      minlength="20"
+                      maxlength="500"
+                      required>{{ land.description }}</textarea>
+            <div class="invalid-feedback">
+                Description required (20-500 characters)
+            </div>
+        </div>
+
+        <!-- Image Field -->
+        <div class="mb-3">
+            <label class="form-label">Land Image</label>
+            <input type="file" 
+                   name="image" 
+                   class="form-control"
+                   accept="image/jpeg, image/png"
+                   onchange="validateImage(this)">
+            <div class="invalid-feedback">
+                Valid image required (JPEG/PNG, max 5MB)
+            </div>
+            {% if land.image %}
+                <div class="mt-2">
+                    <img src="{{ land.image.url }}" 
+                         width="150" 
+                         class="img-thumbnail"
+                         alt="Current land image">
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Form Actions -->
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-save"></i> Update Land
+            </button>
+            <a href="{% url 'view_my_lands' %}" class="btn btn-outline-secondary btn-lg">
+                Cancel
+            </a>
+        </div>
     </form>
 </div>
+
+<!-- Validation Script -->
+<script>
+(function () {
+    'use strict'
+    
+    // Bootstrap form validation
+    const forms = document.querySelectorAll('.needs-validation')
+    
+    // Image validation function
+    window.validateImage = function(input) {
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const validTypes = ['image/jpeg', 'image/png'];
+        
+        if (input.files && input.files[0]) {
+            const file = input.files[0]
+            
+            if (!validTypes.includes(file.type)) {
+                input.setCustomValidity('Invalid file type')
+                input.reportValidity()
+                input.value = ''
+            } else if (file.size > maxSize) {
+                input.setCustomValidity('File size exceeds 5MB')
+                input.reportValidity()
+                input.value = ''
+            } else {
+                input.setCustomValidity('')
+            }
+        }
+    }
+
+    // Form submission validation
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            
+            // Custom location validation
+            const locationInput = form.querySelector('input[name="location"]')
+            if(locationInput) {
+                const trimmedValue = locationInput.value.trim()
+                const isValid = /^[A-Za-z\s]{3,50}$/.test(trimmedValue)
+                
+                if(!isValid) {
+                    locationInput.setCustomValidity('Invalid location format')
+                } else {
+                    locationInput.setCustomValidity('')
+                }
+            }
+            
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+
+<style>
+.needs-validation .form-control:invalid,
+.needs-validation .form-select:invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-control:invalid ~ .invalid-feedback {
+    display: block;
+}
+</style>
 {% endblock %}

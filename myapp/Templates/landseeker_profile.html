@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base1.html' %}
 {% block content %}
 <div class="container mt-5">
   <h2>Land Seeker Profile</h2>
@@ -15,9 +15,15 @@
         <p><strong>Pincode:</strong> {{ user.pincode }}</p>
         <p><strong>Gender:</strong> {{ user.gender }}</p>
         <p><strong>Date of Birth:</strong> {{ landseeker.date_of_birth }}</p>
-        <p><strong>Agricultural Expanse ID:</strong> {{ landseeker.agricultural_expanse_id }}</p>
+        <div class="row">
+  <div class="col-md-6">
+      <a href="{% url 'edit_landseeker_profile' %}" class="btn btn-primary">Edit Profile</a>
+  </div>
+</div>
+</div>
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base3.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Landseekers List</h2>
+
+  {% if landseekers %}
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for seeker in landseekers %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ seeker.user.first_name }}</td>
+            <td>{{ seeker.user.email }}</td>
+            <td>
+              <span class="badge 
+                {% if seeker.status == 'Approved' %} bg-success
+                {% elif seeker.status == 'Rejected' %} bg-danger
+                {% else %} bg-warning text-dark {% endif %}">
+                {{ seeker.status }}
+              </span>
+            </td>
+            <td>
+              <a href="{% url 'view_landseeker_profile' seeker.id %}" class="btn btn-sm btn-primary">View Profile</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">No landseekers available.</div>
+  {% endif %}
+</div>
+{% endblock %}

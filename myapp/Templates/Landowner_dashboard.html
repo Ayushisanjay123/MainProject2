@@ -1,120 +1,613 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
+{% load static %}
 
 {% block title %}Landowner Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-        <h2>Landowner Dashboard</h2>
-    
-    <!-- Add New Land Section -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Add New Land</h4>
+
+
+
+<div class="background-image"></div>
+
+<div class="container mt-4 main-content">
+    <div class="dashboard-header mb-5 text-center">
+        <h2 class="display-5 fw-bold text-success mb-3">
+            <i class="fas fa-tractor me-2"></i> Agricultural Land Management
+        </h2>
+        <p class="lead text-muted">Manage your lands and farming opportunities</p>
+        <div class="header-divider">
+            <div class="divider-line bg-success"></div>
+            <i class="fas fa-leaf divider-icon bg-white text-success"></i>
+            <div class="divider-line bg-success"></div>
         </div>
-        <div class="card-body">
-            <form method="post" action="{% url 'add_land' %}">
+    </div>
+
+    <!-- Add New Land Section -->
+    <div class="card mb-5 border-success shadow-lg">
+        <div class="card-header bg-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus-circle me-2"></i> Register New Agricultural Land
+                </h4>
+                <i class="fas fa-seedling fa-2x opacity-25"></i>
+            </div>
+        </div>
+        <div class="card-body bg-light-green">
+            <form method="post" action="{% url 'add_land' %}" id="landRegistrationForm" novalidate>
                 {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="location" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" required>
+                
+                <div id="formErrors" class="alert alert-danger d-none">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <h5 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> Registration Errors</h5>
+                    <ul id="errorList" class="mb-0"></ul>
+                </div>
+                
+                <div class="row g-4">
+                    <!-- Land Name Field -->
+<div class="col-md-6">
+    <div class="form-floating">
+        <input type="text" class="form-control" id="land_name" name="land_name" placeholder="Land Name" required />
+        <label for="land_name">
+            <i class="fas fa-map-marker-alt me-1 text-success"></i> Land Name
+        </label>
+        <div class="invalid-feedback">
+            Please provide a valid land name.
+        </div>
+        <div class="valid-feedback">
+            <i class="fas fa-check-circle text-success"></i> Valid land name.
+        </div>
+    </div>
+</div>
+
+                    <!-- Location Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="location" name="location" 
+                                   placeholder="Location" required pattern="[A-Za-z0-9\s,.-]{3,}">
+                            <label for="location">
+                                <i class="fas fa-map-marker-alt me-1 text-success"></i> Location
+                            </label>
+                            <div class="invalid-feedback">
+                                Please provide a valid location (min 3 characters).
+                            </div>
+                            <div class="valid-feedback">
+                                <i class="fas fa-check-circle text-success"></i> Valid location.
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="size" class="form-label">Size (acres)</label>
-                        <input type="number" step="0.01" class="form-control" id="size" name="size" required>
+                    
+                    <!-- Size Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <div class="input-group">
+                                <input type="number" step="0.01" class="form-control" id="size" name="size" 
+                                       placeholder="Land Size" required min="0.1" max="10000">
+                                <span class="input-group-text bg-white">acres</span>
+                                <label for="size" class="floating-label-override">
+                                    <i class="fas fa-ruler-combined me-1 text-success"></i> Land Size
+                                </label>
+                            </div>
+                            <div class="invalid-feedback">
+                                Please enter a value between 0.1 and 10,000 acres.
+                            </div>
+                            <div class="valid-feedback">
+                                <i class="fas fa-check-circle text-success"></i> Valid size.
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="soil_type" class="form-label">Soil Type</label>
-                        <input type="text" class="form-control" id="soil_type" name="soil_type" required>
+                    
+                    <!-- Soil Type Field -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select" id="soil_type" name="soil_type" required>
+                                <option value="">Select soil type...</option>
+                                <option value="clay">Clay</option>
+                                <option value="sandy">Sandy</option>
+                                <option value="loamy">Loamy</option>
+                                <option value="silty">Silty</option>
+                                <option value="peaty">Peaty</option>
+                                <option value="chalky">Chalky</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <label for="soil_type">
+                                <i class="fas fa-seedling me-1 text-success"></i> Soil Type
+                            </label>
+                            <div class="invalid-feedback">
+                                Please select a valid soil type.
+                            </div>
+                            <div class="valid-feedback">
+                                <i class="fas fa-check-circle text-success"></i> Soil type selected.
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Water Availability</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="water_availability" name="water_availability">
-                            <label class="form-check-label" for="water_availability">Water Available</label>
+                    
+                    <!-- Water Availability -->
+                    <div class="col-md-6">
+                        <div class="h-100 d-flex flex-column justify-content-center">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" 
+                                       id="water_availability" name="water_availability" style="transform: scale(1.5);">
+                                <label class="form-check-label ms-3" for="water_availability">
+                                    <i class="fas fa-tint me-1 text-primary"></i> Irrigation Water Available
+                                </label>
+                            </div>
+                            <small class="text-muted ms-5">Check if the land has reliable water access.</small>
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Land</button>
+                
+                <div class="mt-4 pt-3 border-top text-center">
+                    <button type="submit" class="btn btn-success btn-lg px-4 py-2 me-3">
+                        <i class="fas fa-save me-2"></i> Register Land
+                    </button>
+                    <button type="reset" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-undo me-1"></i> Reset Form
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 
     <!-- My Lands Section -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>My Lands</h4>
+    <div class="card mb-5 border-primary shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-map-marked-alt me-2"></i> My Agricultural Lands
+                </h4>
+                <span class="badge bg-white text-primary fs-6">{{ lands.count }} registered</span>
+            </div>
         </div>
         <div class="card-body">
-        {% if lands %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-            <tr>
-                <th>Location</th>
-                <th>Size (acres)</th>
-                                <th>Soil Type</th>
-                                <th>Water Available</th>
-                                <th>Actions</th>
-            </tr>
-                        </thead>
-                        <tbody>
-            {% for land in lands %}
-            <tr>
-                <td>{{ land.location }}</td>
-                <td>{{ land.size }}</td>
-                                    <td>{{ land.soil_type }}</td>
-                <td>{{ land.water_availability|yesno:"Yes,No" }}</td>
-                                    <td>
-                                        <a href="{% url 'edit_land' land.id %}" class="btn btn-sm btn-primary">Edit</a>
-                                        <a href="{% url 'delete_land' land.id %}" class="btn btn-sm btn-danger">Delete</a>
-                                    </td>
-            </tr>
-            {% endfor %}
-                        </tbody>
-        </table>
+            {% if lands %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            
+                            <th class="border-end"><i class="fas fa-map-marker-alt me-1 text-success"></i> Location</th>
+                            <th class="border-end"><i class="fas fa-ruler-combined me-1 text-success"></i> Size</th>
+                            <th class="border-end"><i class="fas fa-seedling me-1 text-success"></i> Soil Type</th>
+                            <th class="border-end"><i class="fas fa-tint me-1 text-primary"></i> Water</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for land in lands %}
+                        <tr class="land-row">
+                            <td class="border-end">
+                                <strong>{{ land.location }}</strong>
+                                {% if land.water_availability %}
+                                <span class="badge bg-success bg-opacity-10 text-success ms-2">Irrigated</span>
+                                {% endif %}
+                            </td>
+                            <td class="border-end">{{ land.size }} acres</td>
+                            <td class="border-end">
+                                <span class="badge bg-success bg-opacity-10 text-success">
+                                    {{ land.soil_type|title }}
+                                </span>
+                            </td>
+                            <td class="border-end">
+                                {% if land.water_availability %}
+                                <span class="text-success"><i class="fas fa-check-circle"></i> Available</span>
+                                {% else %}
+                                <span class="text-secondary"><i class="fas fa-times-circle"></i> Not Available</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'edit_land' land.id %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_land' land.id %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state text-center py-5">
+                <div class="empty-state-icon bg-success bg-opacity-10">
+                    <i class="fas fa-map-marked-alt fa-3x text-success"></i>
                 </div>
-        {% else %}
-        <p>You haven't added any lands yet.</p>
-        {% endif %}
+                <h4 class="mt-4 text-muted">No Lands Registered Yet</h4>
+                <p class="text-muted">Start by adding your first agricultural land above</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 
     <!-- Interests Section -->
-    <div class="card">
-        <div class="card-header">
-            <h4>Interests from Land Seekers</h4>
+    <div class="card border-warning shadow-lg mt-4">
+        <div class="card-header bg-warning text-dark">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-handshake me-2"></i> Landseekers Interests Received
+                </h4>
+                <span class="badge bg-white text-warning fs-6">{{ interests.count }} total</span>
+            </div>
         </div>
         <div class="card-body">
-        {% if interests %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-            <tr>
-                <th>Land Location</th>
-                <th>Seeker Name</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-            </tr>
-                        </thead>
-                        <tbody>
-            {% for interest in interests %}
-            <tr>
-                <td>{{ interest.land.location }}</td>
-                                    <td>{{ interest.seeker.user.first_name }} {{ interest.seeker.user.last_name }}</td>
-                                    <td>{{ interest.expressed_on|date:"M d, Y" }}</td>
-                                    <td>
-                                        <a href="{% url 'land_details' interest.land.id %}" class="btn btn-sm btn-info">View Details</a>
-                                    </td>
-            </tr>
-            {% endfor %}
-                        </tbody>
-        </table>
+            {% if interests %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="border-end"><i class="fas fa-map-marker-alt me-1 text-success"></i> Land</th>
+                            <th class="border-end"><i class="fas fa-user me-1 text-primary"></i> Farmer</th>
+                            <th class="border-end"><i class="fas fa-calendar-alt me-1 text-info"></i> Date</th>
+                            <th><i class="fas fa-cogs me-1 text-dark"></i> Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for interest in interests %}
+                        <tr>
+                            <td class="border-end">
+                                <strong>{{ interest.land.location }}</strong>
+                                <small class="d-block text-muted">{{ interest.land.size }} acres</small>
+                            </td>
+                            <td class="border-end">
+                                {{ interest.seeker.user.first_name }} {{ interest.seeker.user.last_name }}
+                                <small class="d-block text-muted">{{ interest.seeker.user.email }}</small>
+                            </td>
+                            <td class="border-end">
+                                {{ interest.expressed_on|date:"M d, Y" }}
+                                <small class="d-block text-muted">{{ interest.expressed_on|timesince }} ago</small>
+                            </td>
+                            <td>
+                                <a href="{% url 'view_interest_details' interest.id %}" class="btn btn-sm btn-outline-warning mb-1">
+                                    <i class="fas fa-eye me-1"></i> View Details
+                                </a>
+                                
+                                {% if interest.status == 'pending' %}
+                                <form method="POST" action="{% url 'approve_interest' interest.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="fas fa-check me-1"></i> Approve
+                                    </button>
+                                </form>
+                                {% else %}
+                                <span class="badge bg-success">{{ interest.status|capfirst }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state text-center py-5">
+                <div class="empty-state-icon bg-warning bg-opacity-10">
+                    <i class="fas fa-handshake fa-3x text-warning"></i>
                 </div>
+                <h4 class="mt-4 text-muted">No Farming Interests Yet</h4>
+                <p class="text-muted">Farmers will appear here when they express interest in your lands</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Notification Section -->
+    <div class="mt-5">
+        <h3>Notifications</h3>
+        {% if notifications %}
+          <ul class="list-group mb-4">
+            {% for note in notifications %}
+              <li class="list-group-item {% if not note.is_read %}list-group-item-info{% endif %}">
+                {{ note.message }}<br>
+                <small class="text-muted">{{ note.timestamp|date:"M d, Y H:i" }}</small>
+              </li>
+            {% endfor %}
+          </ul>
         {% else %}
-        <p>No interests received yet.</p>
+          <p class="text-muted">No notifications yet.</p>
         {% endif %}
     </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastPlacement">
+    <div id="liveToast" class="toast bg-info text-white" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">New Notification</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toast-message">
+            You have a new notification.
+        </div>
     </div>
 </div>
+
+<!-- Notification Sound -->
+<audio id="notification-sound" src="{% static 'sounds/notification.wav' %}" preload="auto"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('landRegistrationForm');
+    const errorContainer = document.getElementById('formErrors');
+    const errorList = document.getElementById('errorList');
+    
+    document.getElementById('location').addEventListener('input', validateLocation);
+    document.getElementById('size').addEventListener('input', validateSize);
+    document.getElementById('soil_type').addEventListener('change', validateSoilType);
+    
+    function validateLocation() {
+        const field = document.getElementById('location');
+        field.classList.remove('is-valid', 'is-invalid');
+        if (field.value.trim().length >= 3 && /^[A-Za-z0-9\s,.-]+$/.test(field.value)) {
+            field.classList.add('is-valid');
+        } else if (field.value.trim() !== '') {
+            field.classList.add('is-invalid');
+        }
+    }
+    
+    function validateSize() {
+        const field = document.getElementById('size');
+        field.classList.remove('is-valid', 'is-invalid');
+        const value = parseFloat(field.value);
+        if (!isNaN(value) && value >= 0.1 && value <= 10000) {
+            field.classList.add('is-valid');
+        } else if (field.value.trim() !== '') {
+            field.classList.add('is-invalid');
+        }
+    }
+    
+    function validateSoilType() {
+        const field = document.getElementById('soil_type');
+        field.classList.remove('is-valid', 'is-invalid');
+        if (field.value !== '') {
+            field.classList.add('is-valid');
+        }
+    }
+    
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        let isValid = true;
+        const errors = [];
+        
+        errorList.innerHTML = '';
+        errorContainer.classList.add('d-none');
+        
+        const location = document.getElementById('location');
+        const size = document.getElementById('size');
+        const soilType = document.getElementById('soil_type');
+        
+        if (location.value.trim() === '') {
+            errors.push('Location is required');
+            location.classList.add('is-invalid');
+            isValid = false;
+        } else if (location.value.trim().length < 3 || !/^[A-Za-z0-9\s,.-]+$/.test(location.value)) {
+            errors.push('Location must be at least 3 characters with only letters, numbers, spaces, commas, periods, or hyphens');
+            location.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            location.classList.add('is-valid');
+        }
+        
+        if (size.value.trim() === '') {
+            errors.push('Land size is required');
+            size.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            const sizeValue = parseFloat(size.value);
+            if (isNaN(sizeValue)) {
+                errors.push('Land size must be a number');
+                size.classList.add('is-invalid');
+                isValid = false;
+            } else if (sizeValue < 0.1) {
+                errors.push('Land size must be at least 0.1 acres');
+                size.classList.add('is-invalid');
+                isValid = false;
+            } else if (sizeValue > 10000) {
+                errors.push('Land size cannot exceed 10,000 acres');
+                size.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                size.classList.add('is-valid');
+            }
+        }
+        
+        if (soilType.value === '') {
+            errors.push('Soil type is required');
+            soilType.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            soilType.classList.add('is-valid');
+        }
+        
+        if (errors.length > 0) {
+            errorContainer.classList.remove('d-none');
+            errors.forEach(error => {
+                const li = document.createElement('li');
+                li.textContent = error;
+                errorList.appendChild(li);
+            });
+            
+            errorContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        if (isValid) {
+            form.submit();
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    {% if unread_count > 0 %}
+        const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+        toast.show();
+        document.getElementById('notification-sound').play();
+    {% endif %}
+});
+</script>
+
+<style>
+:root {
+    --agri-green: #28a745;
+    --agri-green-light: #e8f5e9;
+    --agri-dark: #1e5631;
+    --agri-blue: #17a2b8;
+}
+
+body {
+    position: relative;
+}
+
+.background-image {
+    background-image: url('{% static "images/img-2.jpg" %}');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    filter: blur(8px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.dashboard-header {
+    position: relative;
+    padding-bottom: 1.5rem;
+    z-index: 1;
+}
+
+.header-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    max-width: 400px;
+}
+
+.divider-line {
+    height: 2px;
+    flex-grow: 1;
+}
+
+.divider-icon {
+    padding: 0 1rem;
+    font-size: 1.5rem;
+}
+
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    border-width: 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    padding: 1.25rem 1.5rem;
+    background-color: rgba(40, 167, 69, 0.9);
+}
+
+.bg-light-green {
+    background-color: rgba(40, 167, 69, 0.03);
+}
+
+.form-floating label {
+    color: var(--agri-dark);
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 1rem 1rem;
+    border: 1px solid #dee2e6;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--agri-green);
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: var(--agri-dark);
+}
+
+.land-row:hover {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.badge {
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.35em 0.65em;
+}
+
+.empty-state {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.btn-success {
+    background-color: var(--agri-green);
+    border-color: var(--agri-green);
+}
+
+.btn-success:hover {
+    background-color: var(--agri-dark);
+    border-color: var(--agri-dark);
+}
+
+.btn-outline-success {
+    color: var(--agri-green);
+    border-color: var(--agri-green);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--agri-green);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+}
+
+.floating-label-override {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 1rem 0.75rem;
+    pointer-events: none;
+    transform-origin: 0 0;
+    transition: opacity .1s ease-in-out,transform .1s ease-in-out;
+    color: rgba(33, 37, 41, 0.65);
+    font-size: 0.875em;
+}
+</style>
+
 {% endblock %}

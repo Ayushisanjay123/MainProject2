@@ -1,0 +1,32 @@
+{% extends 'base3.html' %}
+{% block title %}Verify Landowners{% endblock %}
+{% block content %}
+<h2 class="mb-3">Pending Landowner Approvals</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for landowner in pending %}
+        <tr>
+            <td>{{ landowner.First_name }} {{ landowner.Last_name }}</td>
+            <td>{{ landowner.contact_number }}</td>
+            <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="landowner_id" value="{{ landowner.id }}">
+                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-center">No pending approvals.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

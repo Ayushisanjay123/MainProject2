@@ -1,0 +1,35 @@
+{% extends 'base3.html' %}
+{% block content %}
+<h2 class="mb-4">Land Listings</h2>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Slno</th>
+      <th>Location</th>
+      <th>Size (in acres)</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for land in lands %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ land.location }}</td>
+      <td>{{ land.size }}</td>
+      <td>
+        {% if land.is_available %}
+          Available
+        {% else %}
+          Not Available
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4">No lands found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,6 +1,17 @@
-{% extends 'base.html' %}
-{% load static %}
-
+{% block title %}
+<table border="0" width="100%" bgcolor="green">
+    <tr bgcolor="green" >
+        <td><font size=6 color='white'>YieldHub</font></td>
+        <td>
+              <a href="{% url 'index' %}">Home</a></li>
+            <td><a href="{% url 'services' %}">Our Services</a></li>
+                <td>   <a href="{% url 'contact' %}">Contact</a></li>
+                    <td> <a href="{% url 'faq' %}">FAQ</a></li>
+                        <td>   <a href="{% url 'login' %}">Login</a></li>
+                            <td> <a href="{% url 'register' %}">Register</a></li>
+           
+    </table>
+{% endblock %}
 {% block content %}
 <style>
     body {
@@ -19,6 +30,7 @@
         border: none;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         padding: 30px;
+        width: 1000px;
     }
 
     h2 {

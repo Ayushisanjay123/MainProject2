@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>My Interests</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         body {
@@ -43,27 +45,53 @@
             color: #888;
             margin-top: 40px;
         }
+        .btn-outline-info {
+            margin-top: 10px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
+    <table border="0" width="100%" bgcolor="green">
+        <tr bgcolor="green">
+            <td><font size=6 color='white'>YieldHub</font></td>
+            <td>
+                <td><a class="nav-link" href="{% url 'landseeker_dashboard' %}">Home</a></td>
+                <td><a class="nav-link" href="{% url 'land_search' %}">Search</a></td>
+                <td><a class="nav-link" href="{% url 'landseeker_profile' %}">Profile</a></td>
+                <td><a class="nav-link" href="{% url 'my_interests' %}">My Interest</a></td>
+                <td><a class="nav-link" href="{% url 'login' %}">Logout</a></td>
+            </td>
+        </tr>
+    </table>
+
     <h1>My Interests</h1>
 
-    {% if interests %}
-        <div class="card-container">
-            {% for interest in interests %}
-                <div class="interest-card">
-                    <h3>{{ interest.land.title }}</h3>
-                    <p><strong>Location:</strong> {{ interest.land.location }}</p>
-                    <p><strong>Size:</strong> {{ interest.land.size }} acres</p>
-                    <p><strong>Price:</strong> ₹{{ interest.land.price }}</p>
-                    <p><strong>Date Interested:</strong> {{ interest.date_interested|date:"d M Y" }}</p>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="no-interests">You have not shown interest in any lands yet.</p>
-    {% endif %}
+    <div class="card-container">
+        {% for interest in interests %}
+            <div class="interest-card">
+                <h3>{{ interest.land.title }}</h3>
+                <p><strong>Location:</strong> {{ interest.land.location }}</p>
+                <p><strong>Size:</strong> {{ interest.land.size }} acres</p>
+                <p><strong>Price:</strong> ₹{{ interest.land.price }}</p>
+                <p><strong>Date Interested:</strong> <font color="red">{{ interest.expressed_on|date:"d M Y" }}</font></p>
+                <a href="{% url 'payment1'  %}" class="btn btn-success mt-2">
+                    <i class="fas fa-credit-card"></i> Make Payment
+                </a>
+            </div>
+
+                {% if interest.land.landowner.user.id %}
+                    <a href="{% url 'send_message' interest.land.landowner.user.id %}" class="btn btn-outline-info">
+                        <i class="fas fa-comment-alt"></i> Message Landowner
+                    </a>
+                {% endif %}
+            </div>
+            
+        {% empty %}
+            <p class="no-interests">You have not shown interest in any lands yet.</p>
+        {% endfor %}
+    </div>
 
 </body>
 </html>

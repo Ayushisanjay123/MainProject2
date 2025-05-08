@@ -1,0 +1,54 @@
+{% extends 'base3.html' %}
+
+{% block title %}All Landowners{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">All Registered Landowners</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Slno</th>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Address</th>
+            <th>Gender</th>
+            <th>View Profile</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for landowner in landowners %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+
+            <td><img src="{{ landowner.photo.url }}" alt="Photo" width="50" height="50" class="rounded-circle"></td>
+            <td>{{ landowner.user.first_name }} {{ landowner.user.last_name }}</td>
+            <td>{{ landowner.phone }}</td>
+            <td>{{ landowner.address }}</td>
+            <td>{{ landowner.gender }}</td>
+            <td>
+                <a href="{% url 'landowner_detail' landowner.user.id %}" class="btn btn-sm btn-info">View</a>
+            </td>
+            <td>
+                {% if not landowner.verified %}
+                    <form method="post" action="{% url 'approve_landowner' landowner.user.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                    </form>
+                    <form method="post" action="{% url 'reject_landowner' landowner.user.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                    </form>
+                {% else %}
+                    <span class="text-success">Approved</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center">No landowners found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

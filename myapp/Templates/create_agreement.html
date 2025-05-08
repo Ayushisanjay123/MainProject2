@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rental Agreement</title>
+    <style>
+        body { font-family: Georgia; padding: 40px; background: #fdfdfd; }
+        h2 { text-align: center; color: #333; }
+        .section { margin-bottom: 25px; }
+        p { line-height: 1.6; }
+        .signature { margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <h2>Land Rental Agreement</h2>
+
+    <div class="section">
+        <p>This agreement is made between <strong>{{ seeker.user.first_name }} {{ seeker.user.last_name }}</strong>
+        (Land Seeker) residing at <strong>{{ seeker.address }}</strong> and the Landowner who owns the land located at <strong>{{ land.location }}</strong>.</p>
+    </div>
+
+    <div class="section">
+        <p>The land with size of <strong>{{ land.size }} acres</strong> is to be rented for agricultural purposes at a price of <strong>₹{{ land.price }}</strong>.</p>
+    </div>
+
+    <div class="section">
+        <p>Date of Interest: <strong>{{ interest.expressed_on|date:"M d, Y" }}</strong></p>
+    </div>
+
+    <div class="signature">
+        <p>Land Seeker Signature: _____________________</p>
+        <p>Land Owner Signature: ______________________</p>
+        <p>Date: ______________________</p>
+    </div>
+</body>
+</html>

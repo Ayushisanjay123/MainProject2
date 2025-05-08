@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}View Agreements{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Agreements</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Land</th>
+                <th>Landseeker</th>
+                <th>Landowner</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agreement in agreements %}
+                <tr>
+                    <td>{{ agreement.land.location }}</td>
+                    <td>{{ agreement.landseeker }}</td>
+                    <td>{{ agreement.landowner }}</td>
+                    <td>{{ agreement.status }}</td>
+                    <td>
+                        <a href="{% url 'accept_agreement' agreement.id %}" class="btn btn-success">Accept</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No agreements found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base3.html' %}
+
+{% block content %}
+<h2>Landowner Profile</h2>
+<p><strong>Name:</strong> {{ landowner.user.first_name }} {{ landowner.user.last_name }}</p>
+<p><strong>Gender:</strong> {{ landowner.gender }}</p>
+<p><strong>Phone:</strong> {{ landowner.phone }}</p>
+<p><strong>Pincode:</strong> {{ landowner.pincode }}</p>
+<p><strong>Address:</strong> {{ landowner.address }}</p>
+<p><strong>Status:</strong> {{ landowner.status }}</p>
+<p><strong>Photo:</strong><br>
+  <img src="{{ landowner.photo.url }}" alt="Photo" width="200">
+</p>
+
+{% if landowner.status == 'pending' %}
+  <form method="post" action="{% url 'approve_landowner' landowner.user.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Approve</button>
+  </form>
+
+  <form method="post" action="{% url 'reject_landowner' landowner.user.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Reject</button>
+  </form>
+{% else %}
+  <p><em>This landowner has already been {{ landowner.status }}.</em></p>
+{% endif %}
+
+{% endblock %}

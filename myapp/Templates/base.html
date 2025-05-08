@@ -33,6 +33,18 @@
             display: flex;
             align-items: center;
         }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .content {
+            min-height: calc(100vh - 60px); /* Adjust 60px to the height of your footer */
+        }
+
+        footer {
+            height: 60px; /* Set the height of your footer */
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -44,12 +56,12 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+          
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'land_list' %}">Land List</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
 
                 {% if user.is_authenticated and not user.is_superuser %}
@@ -63,12 +75,9 @@
                 {% endif %}
             </ul>
 
-            <ul class="navbar-nav">
-                <!-- Theme Toggle -->
-                <li class="nav-item me-2">
-                    <button class="btn btn-outline-secondary" onclick="toggleTheme()" title="Toggle Dark Mode">
-                        <i class="bi bi-moon"></i>
-                    </button>
+
+                <li class="nav-item me-2"><font color=red>&nbsp;&nbsp;&nbsp;Landowner</font>
+                    
                 </li>
 
                 {% if user.is_authenticated %}

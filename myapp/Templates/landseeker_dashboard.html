@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base1.html' %}
 
 {% block title %}Landseeker Dashboard{% endblock %}
 
@@ -6,25 +6,13 @@
 <div class="container mt-4">
     <h2>Landseeker Dashboard</h2>
     
-    <!-- Profile Section -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>My Profile</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-                    <p><strong>Email:</strong> {{ user.email }}</p>
-                    <p><strong>Contact:</strong> {{ user.landseeker.contact }}</p>
-                </div>
-                <div class="col-md-6">
-                    <a href="{% url 'edit_landseeker_profile' %}" class="btn btn-primary">Edit Profile</a>
-                </div>
-            </div>
-        </div>
+    <!-- Search Section -->
+    <div class="mb-4">
+        <h4>Search for Available Land</h4>
+        <a href="{% url 'land_search' %}" class="btn btn-secondary">Search Available Lands</a>
     </div>
 
+   
     <!-- Available Lands Section -->
     <div class="card mb-4">
         <div class="card-header">
@@ -36,6 +24,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                                <th>Slno</th>
                                 <th>Location</th>
                                 <th>Size (acres)</th>
                                 <th>Soil Type</th>
@@ -46,13 +35,13 @@
                         <tbody>
                             {% for land in available_lands %}
                                 <tr>
+                                    <td>{{ forloop.counter}}</td>
                                     <td>{{ land.location }}</td>
                                     <td>{{ land.size }}</td>
                                     <td>{{ land.soil_type }}</td>
                                     <td>{{ land.water_availability|yesno:"Yes,No" }}</td>
                                     <td>
                                         <a href="{% url 'land_details' land.id %}" class="btn btn-sm btn-info">View Details</a>
-                                        <a href="{% url 'express_interest' land.id %}" class="btn btn-sm btn-primary">Express Interest</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -66,7 +55,7 @@
     </div>
 
     <!-- My Interests Section -->
-    <div class="card">
+    <div class="card mb-4">
         <div class="card-header">
             <h4>My Interests</h4>
         </div>
@@ -76,6 +65,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                                <th>Slno</th>
                                 <th>Land Location</th>
                                 <th>Size (acres)</th>
                                 <th>Date Expressed</th>
@@ -86,10 +76,12 @@
                         <tbody>
                             {% for interest in interests %}
                                 <tr>
+                                    <td>{{ forloop.counter}}</td>
                                     <td>{{ interest.land.location }}</td>
                                     <td>{{ interest.land.size }}</td>
                                     <td>{{ interest.expressed_on|date:"M d, Y" }}</td>
-                                    <td>{{ interest.status }}</td>
+                                    <td><font color="red">{{ interest.status }}</font></td>
+
                                     <td>
                                         <a href="{% url 'land_details' interest.land.id %}" class="btn btn-sm btn-info">View Details</a>
                                         {% if interest.status == 'pending' %}
